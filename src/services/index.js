@@ -1,7 +1,15 @@
-const useMock = process.env.REACT_APP_USE_MOCK === 'true';
+import * as realApi from './api';
+import * as mockApi from './mockApi';
 
-const api = useMock
-  ? require('./mockApi')
-  : require('./api');
+const api = process.env.REACT_APP_USE_MOCK === 'true' ? mockApi : realApi;
 
-module.exports = api;
+export const {
+  getToken, setToken, clearToken,
+  login, register,
+  getMe, updateProfile,
+  getMyGroup, createGroup, joinGroup, updateGroupName, leaveGroup, getRanking,
+  getTasks, createTask, deleteTask,
+  getRewards, createReward, deleteReward,
+  completeTask, getGroupCompletions, getMyCompletions,
+  redeemReward, getRedemptions,
+} = api;
