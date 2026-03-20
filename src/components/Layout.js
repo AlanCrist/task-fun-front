@@ -24,7 +24,7 @@ export default function Layout({ children }) {
   const pageTitle = NAV_KEYS.find(n => n.to === location.pathname)?.key;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="h-screen bg-gray-50 flex overflow-hidden">
       {/* Overlay mobile */}
       {sidebarOpen && (
         <div
@@ -106,7 +106,7 @@ export default function Layout({ children }) {
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0">
         {/* Top bar */}
         <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 lg:px-6">
           <button
