@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import * as api from '../services/api';
+import * as api from '../services';
 
 const AppContext = createContext(null);
 
@@ -35,6 +35,16 @@ export function AppProvider({ children }) {
   }, []);
 
   useEffect(() => {
+    const isMock = process.env.REACT_APP_USE_MOCK === 'true';
+
+    if (isMock) {
+      api.setToken('mock-token-beta');
+      loadUserData()
+        .catch(() => { api.clearToken(); setCurrentUser(null); })
+        .finally(() => setLoading(false));
+      return;
+    }
+
     const token = api.getToken();
     if (token) {
       loadUserData()
