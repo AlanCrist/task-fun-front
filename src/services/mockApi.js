@@ -139,18 +139,19 @@ export async function getMyGroup() {
   const user = db.users.find(u => u.id === currentUserId());
   const group = db.groups.find(g => g.id === user?.groupId);
   if (!group) throw new Error('Sem grupo');
-  return { ...group };
+  return { ...group, memberIds: group.members.map(m => m.id) };
 }
 
 export async function createGroup(name) {
   await delay();
   const db = loadDb();
   const user = db.users.find(u => u.id === currentUserId());
-  const group = { id: uid(), name, code: uid().toUpperCase().slice(0, 6), members: [{ id: user.id, name: user.name, avatar: user.avatar, points: user.points, totalPoints: user.totalPoints }] };
+  const members = [{ id: user.id, name: user.name, avatar: user.avatar, points: user.points, totalPoints: user.totalPoints }];
+  const group = { id: uid(), name, code: uid().toUpperCase().slice(0, 6), members };
   db.groups.push(group);
   user.groupId = group.id;
   saveDb(db);
-  return group;
+  return { ...group, memberIds: members.map(m => m.id) };
 }
 
 export async function joinGroup(code) {
@@ -164,7 +165,7 @@ export async function joinGroup(code) {
     group.members.push({ id: user.id, name: user.name, avatar: user.avatar, points: user.points, totalPoints: user.totalPoints });
   }
   saveDb(db);
-  return group;
+  return { ...group, memberIds: group.members.map(m => m.id) };
 }
 
 export async function updateGroupName(name) {
